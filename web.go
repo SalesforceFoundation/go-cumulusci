@@ -2,10 +2,9 @@ package main
 
 import (
 	"fmt"
+	"github.com/heroku/force"
 	"net/http"
 	"os"
-
-	"github.com/heroku/force"
 )
 
 func main() {
