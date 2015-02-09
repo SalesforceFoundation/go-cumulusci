@@ -1,42 +1,5 @@
 {
 	"ImportPath": "go-cumulusci",
 	"GoVersion": "go1.4.1",
-	"Deps": [
-		{
-			"ImportPath": "bitbucket.org/kardianos/osext",
-			"Comment": "null-15",
-			"Rev": "44140c5fc69ecf1102c5ef451d73cd98ef59b178"
-		},
-		{
-			"ImportPath": "bitbucket.org/pkg/inflect",
-			"Comment": "go.r60-12",
-			"Rev": "8961c3750a47b8c0b3e118d52513b97adf85a7e8"
-		},
-		{
-			"ImportPath": "github.com/ViViDboarder/gotifier",
-			"Rev": "0f19f3d7c54cfe25ce8438b0df4c8792b1e5d462"
-		},
-		{
-			"ImportPath": "github.com/ddollar/config",
-			"Rev": "31d44125bc63bc58f672dfd7e3eb3cd199a3bcdf"
-		},
-		{
-			"ImportPath": "github.com/ddollar/dist",
-			"Comment": "v0.2.0-2-gf559761",
-			"Rev": "f559761fd36c52dc90d7d2c0bc537e6d96b0edc5"
-		},
-		{
-			"ImportPath": "github.com/ddollar/go-update",
-			"Rev": "4733469d35539f410e0e84552944fa0df7e72c98"
-		},
-		{
-			"ImportPath": "github.com/heroku/force",
-			"Comment": "v0.22.8",
-			"Rev": "084349ed7dc3d7bc2a8e2afa91fae58316f5ffd3"
-		},
-		{
-			"ImportPath": "github.com/kr/binarydist",
-			"Rev": "9955b0ab8708602d411341e55fffd7e0700f86bd"
-		}
-	]
+	"Deps": []
 }
