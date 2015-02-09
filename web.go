@@ -22,3 +22,10 @@ func hello(res http.ResponseWriter, req *http.Request) {
 	fmt.Fprintln(res, "Authentication URL: "+herokugoauth.Endpoint.AuthURL)
 	fmt.Fprintln(res, "Token URL: "+herokugoauth.Endpoint.TokenURL)
 }
+
+var h := &herokugoauth.Handler {
+    RequireDomain:   "heroku.com",
+    Key:         os.Getenv("KEY"),
+    ClientID:     os.Getenv("OAUTH_CLIENT_ID"),
+    ClientSecret: os.Getenv("OAUTH_CLIENT_SECRET"),
+}
