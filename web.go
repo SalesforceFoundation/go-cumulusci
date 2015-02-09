@@ -1,8 +1,12 @@
 package main
 
 import (
+	"code.google.com/p/goauth2/oauth"
+	"encoding/json"
 	"fmt"
-	"github.com/heroku/herokugoauth"
+	"github.com/gorilla/sessions"
+	"html"
+	"io/ioutil"
 	"net/http"
 	"os"
 )
@@ -11,14 +15,7 @@ func main() {
 	http.HandleFunc("/", hello)
 	fmt.Println("listening...")
 
-	handler := &herokugoauth.Handler{
-		RequireDomain: "heroku.com",
-		Key:           os.Getenv("KEY"),
-		ClientID:      os.Getenv("OAUTH_CLIENT_ID"),
-		ClientSecret:  os.Getenv("OAUTH_CLIENT_SECRET"),
-	}
-
-	err := http.ListenAndServe(":"+os.Getenv("PORT"), handler)
+	err := http.ListenAndServe(":"+os.Getenv("PORT"), nil)
 	if err != nil {
 		panic(err)
 	}
