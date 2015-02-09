@@ -33,7 +33,7 @@ var commands = []*Command{
 	cmdNotifySet,
 }
 
-func main() {
+func ExecCommand() {
 	args := os.Args[1:]
 	if len(args) < 1 {
 		fmt.Println("Really dood?")
