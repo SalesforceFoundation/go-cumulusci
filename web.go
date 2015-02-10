@@ -27,8 +27,7 @@ var conf = &oauth2.Config{
 
 func main() {
 	http.HandleFunc("/hello", hello)
-	http.HandleFunc("/", handleRoot)
-	http.HandleFunc("/auth/heroku", handleAuth)
+	http.HandleFunc("/", handleAuth)
 
 	err := http.ListenAndServe(":"+os.Getenv("PORT"), nil)
 	if err != nil {
@@ -36,23 +35,18 @@ func main() {
 	}
 }
 
-func hello(res http.ResponseWriter, req *http.Request) {
+func hello(res http.ResponseWriter, r *http.Request) {
 	fmt.Fprintln(res, "hello, heroku")
 	//adding a reference to herokugoauth so it doesn't complain we are not using it
 	fmt.Fprintln(res, "Authentication URL: "+conf.Endpoint.AuthURL)
 	fmt.Fprintln(res, "Token URL: "+conf.Endpoint.TokenURL)
 }
 
-func handleRoot(w http.ResponseWriter, r *http.Request) {
-	body := `<a href="/auth/heroku">Sign in with Salesforce</a>`
-	w.Write([]byte(body))
-}
-
-func handleAuth(w http.ResponseWriter, r *http.Request) {
+func handleAuth(res http.ResponseWriter, r *http.Request) {
 	// Redirect user to consent page to ask for permission
 	// for the scopes specified above.
 	url := conf.AuthCodeURL("state", oauth2.AccessTypeOffline)
-	fmt.Printf("Visit the URL for the auth dialog: %v", url)
+	fmt.Fprintln(res, "Visit the URL for the auth dialog: "+url)
 
 	// Use the authorization code that is pushed to the redirect URL.
 	// NewTransportWithCode will do the handshake to retrieve
