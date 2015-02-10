@@ -46,7 +46,10 @@ func handleAuth(res http.ResponseWriter, r *http.Request) {
 	// Redirect user to consent page to ask for permission
 	// for the scopes specified above.
 	url := conf.AuthCodeURL("state", oauth2.AccessTypeOffline)
-	fmt.Fprintln(res, "Visit the URL for the auth dialog: "+url)
+	//fmt.Fprintln(res, "Visit the URL for the auth dialog: "+url)
+
+	body := `<a href="`url`">Sign in with Salesforce</a>`
+	w.Write([]byte(body))
 
 	// Use the authorization code that is pushed to the redirect URL.
 	// NewTransportWithCode will do the handshake to retrieve
