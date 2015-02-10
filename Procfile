@@ -1,2 +1,2 @@
 web: go-cumulusci
-worker: worker
+#worker: worker

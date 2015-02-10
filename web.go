@@ -22,7 +22,7 @@ var conf = &oauth2.Config{
 		AuthURL:  "https://login.salesforce.com/services/oauth2/authorize",
 		TokenURL: "https://login.salesforce.com/services/oauth2/token",
 	},
-	RedirectURL: "/auth/heroku/callback",
+	RedirectURL: "https://go-cumulusci.herokuapp.com/auth/heroku/callback",
 }
 
 func main() {
@@ -38,10 +38,10 @@ func main() {
 
 func config(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintln(w, "Current Configuration:")
-	//adding a reference to herokugoauth so it doesn't complain we are not using it
 	fmt.Fprintln(w, "Authentication URL: "+conf.Endpoint.AuthURL)
 	fmt.Fprintln(w, "Token URL: "+conf.Endpoint.TokenURL)
 	fmt.Fprintln(w, "Redirect URL: "+conf.RedirectURL)
+	fmt.Fprintln(w, "Host URL: "+r.URL.Host)
 }
 
 func handleAuth(w http.ResponseWriter, r *http.Request) {
