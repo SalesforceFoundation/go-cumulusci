@@ -52,7 +52,7 @@ func handleAuth(res http.ResponseWriter, r *http.Request) {
 	// NewTransportWithCode will do the handshake to retrieve
 	// an access token and initiate a Transport that is
 	// authorized and authenticated by the retrieved token.
-	var code string
+	/**var code string
 	if _, err := fmt.Scan(&code); err != nil {
 		panic(err)
 	}
@@ -62,5 +62,5 @@ func handleAuth(res http.ResponseWriter, r *http.Request) {
 	}
 
 	client := conf.Client(oauth2.NoContext, tok)
-	client.Get("...")
+	client.Get("...")**/
 }
