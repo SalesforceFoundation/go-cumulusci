@@ -28,6 +28,7 @@ var conf = &oauth2.Config{
 func main() {
 	http.HandleFunc("/hello", hello)
 	http.HandleFunc("/", handleAuth)
+	http.HandleFunc("/auth/heroku/callback", handleCallback)
 
 	err := http.ListenAndServe(":"+os.Getenv("PORT"), nil)
 	if err != nil {
@@ -66,4 +67,9 @@ func handleAuth(w http.ResponseWriter, r *http.Request) {
 
 	client := conf.Client(oauth2.NoContext, tok)
 	client.Get("...")**/
+}
+
+func handleCallback(w http.ResponseWriter, r *http.Request) {
+	body := `<p>You have successfully authenticated!`
+	w.Write([]byte(body))
 }
