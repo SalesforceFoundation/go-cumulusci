@@ -22,7 +22,7 @@ var conf = &oauth2.Config{
 		AuthURL:  "https://login.salesforce.com/services/oauth2/authorize",
 		TokenURL: "https://login.salesforce.com/services/oauth2/token",
 	},
-	RedirectURL: "https://go-cumulusci.herokuapp.com/auth/heroku/callback",
+	RedirectURL: os.Getenv("REDIRECT_URL"),
 }
 
 func main() {

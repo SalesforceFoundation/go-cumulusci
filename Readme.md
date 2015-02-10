@@ -2,19 +2,15 @@ This application performs Oauth from Heroku to Salesforce.
 
 First you need to create a Connected app in any production of developer org you own (Setup > Apps > Connected App). Enable Oauth for it, give it permissions, and enter a callback like https://MYAPPNAME.herokuapp.com/auth/heroku/callback. Save it, and enter the provided ID and Secret in your app configuration in Heroku, as below. (Or deploy the app and enter them through the web UI.)
 
-Then check out the project:
+To deploy to Heroku:
+
 ```
 $ git clone https://github.com/SalesforceFoundation/go-cumulusci
-```
-And change the "RedirectURL" property in the web.go file to match your app's name.
-
-Now you can deploy to Heroku:
-
-```
 $ cd go-cumulusci/
 $ heroku create MYAPPNAME -b https://github.com/kr/heroku-buildpack-go.git
 $ heroku config:add OAUTH_CLIENT_ID= #Salesforce-provided ID
 $ heroku config:add OAUTH_CLIENT_SECRET= #Salesforce-provided Secret
+$ heroku config:add REDIRECT_URL=https://MYAPPNAME.herokuapp.com/auth/heroku/callback
 $ git push heroku master
 ```
 
