@@ -26,7 +26,7 @@ var conf = &oauth2.Config{
 }
 
 func main() {
-	http.HandleFunc("/config", hello)
+	http.HandleFunc("/config", config)
 	http.HandleFunc("/", handleAuth)
 	http.HandleFunc("/auth/heroku/callback", handleCallback)
 
