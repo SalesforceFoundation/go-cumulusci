@@ -41,8 +41,6 @@ func config(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintln(w, "Authentication URL: "+conf.Endpoint.AuthURL)
 	fmt.Fprintln(w, "Token URL: "+conf.Endpoint.TokenURL)
 	fmt.Fprintln(w, "Redirect URL: "+conf.RedirectURL)
-	hostname, _ := os.Hostname()
-	fmt.Fprintln(w, "Host URL: "+hostname)
 }
 
 func handleAuth(w http.ResponseWriter, r *http.Request) {
