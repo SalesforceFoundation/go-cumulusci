@@ -22,11 +22,11 @@ var conf = &oauth2.Config{
 		AuthURL:  "https://login.salesforce.com/services/oauth2/authorize",
 		TokenURL: "https://login.salesforce.com/services/oauth2/token",
 	},
-	RedirectURL: "https://go-cumulusci.herokuapp.com/auth/heroku/callback",
+	RedirectURL: "/auth/heroku/callback",
 }
 
 func main() {
-	http.HandleFunc("/hello", hello)
+	http.HandleFunc("/config", hello)
 	http.HandleFunc("/", handleAuth)
 	http.HandleFunc("/auth/heroku/callback", handleCallback)
 
@@ -36,11 +36,12 @@ func main() {
 	}
 }
 
-func hello(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "hello, heroku")
+func config(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintln(w, "Current Configuration:")
 	//adding a reference to herokugoauth so it doesn't complain we are not using it
 	fmt.Fprintln(w, "Authentication URL: "+conf.Endpoint.AuthURL)
 	fmt.Fprintln(w, "Token URL: "+conf.Endpoint.TokenURL)
+	fmt.Fprintln(w, "Redirect URL: "+conf.RedirectURL)
 }
 
 func handleAuth(w http.ResponseWriter, r *http.Request) {
@@ -70,6 +71,6 @@ func handleAuth(w http.ResponseWriter, r *http.Request) {
 }
 
 func handleCallback(w http.ResponseWriter, r *http.Request) {
-	body := `<p>You have successfully authenticated!`
+	body := `<p>You have successfully authenticated!</p>`
 	w.Write([]byte(body))
 }
