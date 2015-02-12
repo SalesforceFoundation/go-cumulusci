@@ -54,11 +54,12 @@ func handleAuth(w http.ResponseWriter, r *http.Request) {
 }
 
 func handleCallback(w http.ResponseWriter, r *http.Request) {
-	//Get the authorization code.
+	//get the authorization code
 	code := r.FormValue("code")
 	log.Println("****Returned code: " + code)
 
-	//Setting up parameters to do the refresh token request
+	//set up parameters to do the refresh token request - the default oauth2 exchange method does not work because of
+	//of the additional grant_type parameter required by Salesforce
 	data := url.Values{}
 	data.Set("code", code)
 	data.Set("grant_type", "authorization_code")
@@ -66,11 +67,11 @@ func handleCallback(w http.ResponseWriter, r *http.Request) {
 	data.Set("client_secret", conf.ClientSecret)
 	data.Set("redirect_uri", conf.RedirectURL)
 
-	//Requesting the refresh token
+	//request the refresh token
 	client := &http.Client{}
 	tokenResp, err := client.Post("https://login.salesforce.com/services/oauth2/token", "application/x-www-form-urlencoded",
 		bytes.NewBufferString(data.Encode())) // <-- URL-encoded payload
-	showError(w, err)
+	showError(err)
 	//displayOnPage(w, tokenResp)
 
 	type RefreshTokenData struct {
@@ -86,28 +87,41 @@ func handleCallback(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var tokenData RefreshTokenData
+	//the response comes back as JSON. We need to decode it
 	decoder := json.NewDecoder(tokenResp.Body)
 	if jsonerr := decoder.Decode(&tokenData); jsonerr != nil {
 		log.Println("****Failed to decode json")
-	} else {
-		log.Println("****Refresh token: " + tokenData.Refresh_token)
-		url := fmt.Sprintf(tokenData.Instance_url+"/services/data/32/query?q=%s", url.QueryEscape("select Id, name from account"))
-		log.Println("****Query url: " + url)
-		queryResp, err := client.Get(url)
-		showError(w, err)
-
-		displayOnPage(w, queryResp)
+		panic(jsonerr)
 	}
+
+	log.Println("****Refresh token: " + tokenData.Refresh_token)
+	log.Println("****Instance url: " + tokenData.Instance_url)
+
+	//store access token in session
+	session, err := store.Get(r, "go-cumulusci")
+	showError(err)
+	session.Values["ACCESS_TOKEN"] = tokenData.Access_token
+	session.Save(r, w)
+
+	//send test query
+	url := fmt.Sprintf(tokenData.Instance_url+"/services/data/v32.0/query?q=%s", url.QueryEscape("select Id, name from account"))
+	log.Println("****Query url: " + url)
+	req, err := http.NewRequest("GET", url, nil)
+	showError(err)
+	req.Header.Add("Authorization", "Bearer "+tokenData.Access_token)
+	queryResp, err := client.Do(req)
+
+	displayOnPage(w, queryResp)
 }
 
 func displayOnPage(w http.ResponseWriter, resp *http.Response) {
 	defer resp.Body.Close()
 	respBody, err := ioutil.ReadAll(resp.Body)
-	showError(w, err)
+	showError(err)
 	w.Write([]byte(respBody))
 }
 
-func showError(w http.ResponseWriter, err error) {
+func showError(err error) {
 	if err != nil {
 		panic(err)
 	}
