@@ -1,6 +1,6 @@
 This application performs Oauth from Heroku to Salesforce.
 
-First you need to create a Connected app in any production of developer org you own (Setup > Apps > Connected App). Enable Oauth for it, give it permissions, and enter a callback like https://MYAPPNAME.herokuapp.com/auth/heroku/callback. Save it, and enter the provided ID and Secret in your app configuration in Heroku, as below. (Or deploy the app and enter them through the web UI.)
+First you need to create a Connected app in any production of developer org you own (Setup > Apps > Connected App). Enable Oauth for it, give it "Full" and "Perform requests on your behalf at any time" permissions, and enter a callback like https://MYAPPNAME.herokuapp.com/auth/heroku/callback. Save it, and enter the provided ID and Secret in your app configuration in Heroku, as below. (Or deploy the app and enter them through the web UI.)
 
 To deploy to Heroku:
 
