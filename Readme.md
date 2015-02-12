@@ -11,6 +11,7 @@ Oauth config steps:
  5. Save it
  6. Enter the provided ID and Secret in your app configuration in Heroku, as below (or deploy the app and enter them through the web UI)
 
+ 
  If you want to be able to run it locally (very useful for development):
 
  7. Create another Connected App, with callback http://localhost:5000/auth/heroku/callback
