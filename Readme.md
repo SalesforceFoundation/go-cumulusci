@@ -13,7 +13,7 @@ Oauth config steps:
 
  If you want to be able to run it locally (very useful for development):
 
- 7. Create another Connected App, with callback http:/localhost:5000/auth/heroku/callback
+ 7. Create another Connected App, with callback http://localhost:5000/auth/heroku/callback
  8. Create a .env file in the root of your project, and put the OAUTH_CLIENT_ID, OAUTH_CLIENT_SECRET, REDIRECT_URL, and KEY (any random key) as key/value pairs there (add this file to .gitignore so you don't commit it by mistake)
 
 To deploy to Heroku:
