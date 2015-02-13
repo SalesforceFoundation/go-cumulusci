@@ -1,1 +1,6 @@
-{{define "accounts"}} Accounts {{end}}
+<h1>Org Accounts</h1>
+{{ with .Records }}
+	{{range .}}
+	<p>Id: {{ .Id }} - Name: {{ .Name }}
+	{{ end }}
+{{ end }}

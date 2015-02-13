@@ -131,7 +131,7 @@ func handleCallback(w http.ResponseWriter, r *http.Request) {
 
 	t, err := template.ParseFiles("./view/accounts.html")
 	showError(err)
-	terr := t.ExecuteTemplate(w, "accounts", accountData)
+	terr := t.Execute(w, accountData)
 	showError(terr)
 }
 
