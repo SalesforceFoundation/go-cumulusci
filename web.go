@@ -6,12 +6,43 @@ import (
 	"fmt"
 	"github.com/gorilla/sessions"
 	"golang.org/x/oauth2"
+	"html/template"
+	"io"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"net/url"
 	"os"
 )
+
+type RefreshTokenData struct {
+	Id            string `json:"id"`
+	Issued_at     string `json:"issued_at"`
+	Scope         string `json:"scope"`
+	Instance_url  string `json:"instance_url"`
+	Token_type    string `json:"token_type"`
+	Refresh_token string `json:"refresh_token"`
+	Id_token      string `json:"id_token"`
+	Signature     string `json:"signature"`
+	Access_token  string `json:"access_token"`
+}
+
+type QueryResponse struct {
+	TotalSize int      `json:"totalSize"`
+	Done      bool     `json:"done"`
+	Records   []Record `json:"records"`
+}
+
+type Record struct {
+	Attributes Attributes `json:"attributes"`
+	Id         string     `json:"Id"`
+	Name       string     `json:"Name"`
+}
+
+type Attributes struct {
+	Type string `json:"type"`
+	Url  string `json:"url"`
+}
 
 var store = sessions.NewCookieStore([]byte(os.Getenv("KEY")))
 
@@ -58,8 +89,8 @@ func handleCallback(w http.ResponseWriter, r *http.Request) {
 	code := r.FormValue("code")
 	log.Println("****Returned code: " + code)
 
-	//set up parameters to do the refresh token request - the default oauth2 exchange method does not work because of
-	//of the additional grant_type parameter required by Salesforce
+	//set up parameters to do the refresh token request - we are building the request and parsing the response manually
+	//because the Exchange method from the oauth2 package didn't work. maybe it was because of the scopes property of config
 	data := url.Values{}
 	data.Set("code", code)
 	data.Set("grant_type", "authorization_code")
@@ -74,28 +105,10 @@ func handleCallback(w http.ResponseWriter, r *http.Request) {
 	showError(err)
 	//displayOnPage(w, tokenResp)
 
-	type RefreshTokenData struct {
-		Id            string `json:"id"`
-		Issued_at     string `json:"issued_at"`
-		Scope         string `json:"scope"`
-		Instance_url  string `json:"instance_url"`
-		Token_type    string `json:"token_type"`
-		Refresh_token string `json:"refresh_token"`
-		Id_token      string `json:"id_token"`
-		Signature     string `json:"signature"`
-		Access_token  string `json:"access_token"`
-	}
-
 	var tokenData RefreshTokenData
 	//the response comes back as JSON. We need to decode it
-	decoder := json.NewDecoder(tokenResp.Body)
-	if jsonerr := decoder.Decode(&tokenData); jsonerr != nil {
-		log.Println("****Failed to decode json")
-		panic(jsonerr)
-	}
-
+	decodeJson(tokenResp.Body, &tokenData)
 	log.Println("****Refresh token: " + tokenData.Refresh_token)
-	log.Println("****Instance url: " + tokenData.Instance_url)
 
 	//store access token in session
 	session, err := store.Get(r, "go-cumulusci")
@@ -110,8 +123,24 @@ func handleCallback(w http.ResponseWriter, r *http.Request) {
 	showError(err)
 	req.Header.Add("Authorization", "Bearer "+tokenData.Access_token)
 	queryResp, err := client.Do(req)
+	//displayOnPage(w, queryResp)
 
-	displayOnPage(w, queryResp)
+	//decode response
+	var accountData QueryResponse
+	decodeJson(queryResp.Body, &accountData)
+
+	t, err := template.ParseFiles("./view/accounts.html")
+	showError(err)
+	terr := t.ExecuteTemplate(w, "accounts", accountData)
+	showError(terr)
+}
+
+func decodeJson(in io.ReadCloser, out interface{}) {
+	decoder := json.NewDecoder(in)
+	if jsonerr := decoder.Decode(out); jsonerr != nil {
+		log.Println("****Failed to decode json")
+		panic(jsonerr)
+	}
 }
 
 func displayOnPage(w http.ResponseWriter, resp *http.Response) {
