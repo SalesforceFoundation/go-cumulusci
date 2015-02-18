@@ -58,7 +58,7 @@ var conf = &oauth2.Config{
 }
 
 func main() {
-	http.HandleFunc("/config", config)
+	http.HandleFunc("/showconfig", showconfig)
 	http.HandleFunc("/", handleAuth)
 	http.HandleFunc("/auth/heroku/callback", handleCallback)
 
@@ -68,7 +68,7 @@ func main() {
 	}
 }
 
-func config(w http.ResponseWriter, r *http.Request) {
+func showconfig(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintln(w, "Current Configuration:")
 	fmt.Fprintln(w, "Authentication URL: "+conf.Endpoint.AuthURL)
 	fmt.Fprintln(w, "Token URL: "+conf.Endpoint.TokenURL)
@@ -123,7 +123,6 @@ func handleCallback(w http.ResponseWriter, r *http.Request) {
 	showError(err)
 	req.Header.Add("Authorization", "Bearer "+tokenData.Access_token)
 	queryResp, err := client.Do(req)
-	//displayOnPage(w, queryResp)
 
 	//decode response
 	var accountData QueryResponse

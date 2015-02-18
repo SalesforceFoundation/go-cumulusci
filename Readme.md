@@ -43,6 +43,7 @@ To develop you'll also need to know these commands:
 ```					 	
 $ go get github.com/kr/godep 	#installs godeps
 $ godep save 					#adds dependencies to the Godeps folder (they need to have been installed locally)
+$ godep go install 				#builds the project using the saved dependencies in Godeps
 ```
 
 Note: currently, when you run godeps on mac, it adds darwin/386 after the go version in Godeps.json. You need to remove that, or the push to Heroku will fail. (https://github.com/tools/godep/issues/181.)
